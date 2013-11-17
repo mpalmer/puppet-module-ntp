@@ -1,0 +1,5 @@
+# THIS FILE IS AUTOMATICALLY DISTRIBUTED BY PUPPET. ANY LOCAL CHANGES WILL BE OVERWRITTEN!
+# 
+# Drop root to id 'ntp:ntp' by default.  Requires kernel >= 2.2.18.
+OPTIONS="-u ntp:ntp -p /var/run/ntpd.pid"
+#OPTIONS="$OPTIONS -x"
