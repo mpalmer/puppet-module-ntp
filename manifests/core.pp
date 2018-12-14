@@ -4,9 +4,9 @@ class ntp::core {
 	file {
 		"/var/lib/ntp":
 			ensure  => directory,
-			mode    => 0755,
-			owner   => ntp,
-			group   => ntp,
+			mode    => "0755",
+			owner   => "ntp",
+			group   => "ntp",
 			require => Package["ntp"],
 			before  => Service["ntpd"];
 		"/etc/ntp/drift":
@@ -16,7 +16,7 @@ class ntp::core {
 	}
 
 	case $::operatingsystem {
-		RedHat,CentOS: {
+		"RedHat", "CentOS": {
 			if $operatingsystem == "RedHat" and to_i($::operatingsystemrelease) < 4 {
 				$sysconfig = "puppet:///modules/ntp/etc/sysconfig/ntpd.4.1"
 			} else {
@@ -24,7 +24,7 @@ class ntp::core {
 			}
 			file { "/etc/sysconfig/ntpd":
 				source  => $sysconfig,
-				mode    => 0444,
+				mode    => "0444",
 				require => Package["ntp"],
 				before  => Service["ntpd"],
 				notify  => Service["ntpd"];
@@ -47,11 +47,11 @@ class ntp::core {
 				subscribe  => Package["ntp"];
 			}
 		}
-		Debian: {
+		"Debian": {
 			file {
 				"/etc/default/ntpdate":
 					source  => "puppet:///modules/ntp/etc/default/ntpdate",
-					mode    => 0444,
+					mode    => "0444",
 					require => Package["ntp"],
 					before  => Service["ntpd"],
 					notify  => Service["ntpd"];
@@ -70,6 +70,9 @@ class ntp::core {
 				require    => Package["ntp"],
 				subscribe  => Package["ntp"];
 			}
+		}
+		default: {
+			fail("Unsupported \$::operatingsystem ${::operatingsystem}.  PR welcome.")
 		}
 	}
 }

@@ -6,11 +6,14 @@ define ntp::timezone($timezone) {
 
 	# Debian also has a plaintext timezone file
 	case $::operatingsystem {
-		Debian: {
+		"Debian": {
 			file { "/etc/timezone":
 				content => "${timezone}\n",
-				mode    => 0444;
+				mode    => "0444";
 			}
+		}
+		default: {
+			fail("Unsupported \$::operatingsystem '${::operatingsystem}'.  PR welcome.")
 		}
 	}
 }

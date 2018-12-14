@@ -17,15 +17,18 @@ define ntp::config($source   = undef,
 		$ntp_monitors = maybe_split($monitors, '[\s,]+')
 
 		case $::operatingsystem {
-			RedHat,CentOS: {
+			"RedHat", "CentOS": {
 				$ntp_driftfile = "/var/lib/ntp/drift"
 			}
-			Debian: {
+			"Debian": {
 				$ntp_driftfile = "/var/lib/ntp/ntp.drift"
+			}
+			default: {
+				fail("Unsupported \$::operatingsystem '${::operatingsystem}'.  PR welcome.")
 			}
 		}
 
-		if to_i($::operatingsystemrelease) >= 5 {
+		if 0 + $::operatingsystemrelease >= 5 {
 			$ntp_has_ipv6 = true
 		} else {
 			$ntp_has_ipv6 = false
